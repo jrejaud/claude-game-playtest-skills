@@ -1,0 +1,11 @@
+# Desktop input contract against fixture.html
+events on
+click #card
+click #card --mods Shift
+rclick #card
+dblclick #card
+press F
+press Shift+Q
+wheel 0 120
+wheel 0 -120 --mods Control
+drag @({x:70,y:82}) #drop

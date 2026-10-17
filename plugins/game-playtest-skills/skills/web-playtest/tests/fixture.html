@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>web-playtest fixture</title>
+<style>
+  html, body { margin: 0; height: 100%; font: 14px sans-serif; touch-action: none; }
+  #card { position: absolute; left: 40px; top: 40px; width: 60px; height: 84px; background: #36c; color: #fff; }
+  #drop { position: absolute; left: 200px; top: 200px; width: 100px; height: 100px; background: #eee; }
+  #out { position: absolute; left: 0; bottom: 0; }
+</style>
+</head>
+<body>
+<div id="card">card</div>
+<div id="drop">drop</div>
+<pre id="out"></pre>
+<script>
+  // Mimics a pointer-sensor drag library: drag starts only after 5px of movement.
+  const S = (window.state = { clicks: 0, rclicks: 0, dbl: 0, keys: [], wheel: 0, ctrlWheel: 0, dropped: false, taps: 0, maxTouches: 0, pinchScale: 1, longpress: false, shiftClick: false });
+  const card = document.getElementById('card');
+  let start = null, dragging = false, pressT = 0, pinch0 = 0;
+  card.addEventListener('pointerdown', (e) => { start = { x: e.clientX, y: e.clientY }; pressT = performance.now(); card.setPointerCapture(e.pointerId); });
+  card.addEventListener('pointermove', (e) => {
+    if (!start) return;
+    if (!dragging && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 5) dragging = true;
+    if (dragging) { card.style.left = e.clientX - 30 + 'px'; card.style.top = e.clientY - 42 + 'px'; }
+  });
+  card.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'touch' && !dragging && performance.now() - pressT > 500) S.longpress = true;
+    if (dragging) {
+      const d = document.getElementById('drop').getBoundingClientRect();
+      S.dropped = e.clientX >= d.left && e.clientX <= d.right && e.clientY >= d.top && e.clientY <= d.bottom;
+    }
+    start = null; dragging = false;
+  });
+  card.addEventListener('click', (e) => { S.clicks++; if (e.shiftKey) S.shiftClick = true; });
+  card.addEventListener('dblclick', () => S.dbl++);
+  card.addEventListener('contextmenu', (e) => { e.preventDefault(); S.rclicks++; });
+  window.addEventListener('keydown', (e) => S.keys.push((e.shiftKey ? 'Shift+' : '') + e.key));
+  window.addEventListener('wheel', (e) => { if (e.ctrlKey) S.ctrlWheel++; else S.wheel++; }, { passive: true });
+  window.addEventListener('touchstart', (e) => {
+    S.maxTouches = Math.max(S.maxTouches, e.touches.length);
+    if (e.touches.length === 2) pinch0 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  });
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && pinch0) S.pinchScale = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY) / pinch0;
+  });
+  window.addEventListener('touchend', (e) => { if (e.touches.length === 0 && e.changedTouches.length === 1) S.taps++; });
+</script>
+</body>
+</html>

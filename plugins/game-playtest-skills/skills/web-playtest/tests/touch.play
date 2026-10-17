@@ -1,0 +1,6 @@
+# Touch input contract against fixture.html (run with --device iphone)
+cursor on
+tap 150,400
+longpress #card --ms 700
+pinch 200,400 --scale 2
+tdrag #card #drop

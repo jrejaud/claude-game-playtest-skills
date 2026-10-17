@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Wrapper: installs playwright-core + a matching headless Chromium on first run, then execs the CLI.
+set -euo pipefail
+here="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")" && pwd)"
+if [ ! -d "$here/node_modules/playwright-core" ]; then
+  echo "web-playtest: first run, installing playwright-core + Chromium (one-time)…" >&2
+  (cd "$here" && npm install --silent --no-audit --no-fund >&2 && npx --yes playwright-core install chromium >&2)
+fi
+exec node "$here/web-playtest.mjs" "$@"

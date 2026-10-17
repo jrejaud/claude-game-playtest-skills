@@ -1,0 +1,6 @@
+{
+  "name": "game-playtest-skills",
+  "description": "Playtesting skills for game dev: recording-driven playtest review, telemetry, agentic playtesting, and real mouse/keyboard/touch input for web games",
+  "version": "1.0.0",
+  "license": "MIT"
+}

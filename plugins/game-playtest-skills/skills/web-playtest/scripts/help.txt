@@ -1,0 +1,21 @@
+web-playtest — drive any web page with real mouse / keyboard / multi-touch input.
+
+SESSION   start <url> [--device desktop|iphone|ipad|pixel|"<Playwright device>"] [--headed] [--video DIR] [--replace]
+          stop · sessions · info · goto <url> · reload · resize <w> <h> · wait <ms> · throttle <rate> (CDP CPU slowdown: 4 = mid-range phone, 1 = off)
+          (all verbs take --session NAME, default "default"; or env WEB_PLAYTEST_SESSION)
+TARGETS   "x,y" viewport pixels, any Playwright selector (css, text=Foo, [data-card-id=x]) → its center,
+          or "@<js expr>" returning {x,y} — for canvas/WebGL apps with no DOM per object.
+          --offset dx,dy nudges the start target; --to-offset for the end target of drag/swipe.
+MOUSE     move <t> [--steps N] · down/up [--button left|right|middle]
+          click <t> [--button B] [--count N] [--mods Shift+Alt] · dblclick <t> · rclick <t>
+          hover <t> [--ms N] · wheel <dx> <dy> [--at t] [--mods Control]
+          drag <a> <b> [--steps 25] [--hold ms] [--pause ms] [--mods M] [--button B] [--no-release]
+KEYBOARD  press <key|chord e.g. F, Shift+F, Control+z> [--repeat N] · keydown <k> · keyup <k> · type <text>
+TOUCH     tap <t> · dtap <t> · longpress <t> [--ms 700] [--no-release]
+          swipe <a> <b> [--ms 250] [--hold ms] · tdrag <a> <b> [--hold 300] [--ms 500]
+          pinch [center] [--scale 2|0.5] [--dist 120] [--ms 400] · pan2 <a> <b> [--gap 60] [--ms 400]
+          touch start|move '[{"x":..,"y":..},...]' | '@<expr → [{x,y},...]>' · touch end   (raw multi-finger)
+OBSERVE   screenshot [path] [--sel S] [--full] · snapshot [sel] (aria tree) · rect <sel>
+          eval '<js expr>' · console [--clear] · events on|dump|clear (DOM input events received)
+          cursor on|off (visible pointer/finger dots in screenshots and video)
+SCRIPT    run <file> [--keep-going]   one verb per line, same syntax, # comments

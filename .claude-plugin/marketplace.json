@@ -1,0 +1,13 @@
+{
+  "name": "game-playtest",
+  "owner": {
+    "name": "claude-game-playtest-skills"
+  },
+  "plugins": [
+    {
+      "name": "game-playtest-skills",
+      "source": "./plugins/game-playtest-skills",
+      "description": "Playtesting skills for game dev: recording-driven playtest review, telemetry, agentic playtesting, and real mouse/keyboard/touch input for web games"
+    }
+  ]
+}
